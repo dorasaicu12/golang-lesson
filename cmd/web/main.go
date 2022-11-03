@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/alexedwards/scs/v2"
 	"github.com/dorasaicu12/booking/pkg/config"
 	"github.com/dorasaicu12/booking/pkg/handlers"
 	"github.com/dorasaicu12/booking/pkg/render"
-	"log"
-	"net/http"
-	"time"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	
+
 	"github.com/justinas/nosurf"
-	
 )
 
 const portNumber = ":8080"
@@ -61,7 +61,7 @@ func main() {
 	}
 }
 
-//routing
+// routing
 func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 
@@ -72,6 +72,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
 
+	fileServer := http.FileServer(http.Dir("./static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 	return mux
 }
 
