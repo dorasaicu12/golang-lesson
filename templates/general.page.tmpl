@@ -1,0 +1,92 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container ">
+
+    <div class="row">
+        <div class="col-lg-6 col-md-3 col-sm-12 col-xs-12">
+            <img src="/static/images/generals-quarters.png" alt="this is general pics" class="img-fluid mx-auto d-block room-image">
+        </div>
+    </div>
+
+  <div class="row">
+    <div class="col">
+        <h1 class="text-center mt-4">General quater</h1>
+        <p>
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+            vYour home way home,set on a journey with us now
+            Your home way home,set on a journey with us now
+        </p>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col text-center">
+        <button class="btn btn-primary" id="But1"> Check avaibility </button>
+      </div>
+  </div>
+
+
+</div>
+<script>
+    document.getElementById("But1").addEventListener("click",function(){
+// notifiModal('hey !!!','error','it a error so.....')
+let html=`
+ <form id="check-avai-form" action="" method="post" novalidate class="needs-validation">
+     <div class="form-row">
+       <div class ="col">
+         <div class ="form-row" id="reservation-dates-modal">
+           <div class ="col">
+             <input required class="form-control" type="text" disabled name="start" id="start" placeholder="Arrival">
+           </div>
+           <div class ="col">
+             <input required class="form-control" type="text" disabled name="end" id="end" placeholder="Departure">
+           </div>
+         </div>
+       </div>
+     </div>
+ </form>
+`
+      attention.customer({
+        msg: html,
+        title: "Choose your date",
+        willOpen: () => {
+          const elem = document.getElementById('check-avai-form')
+          const rp = new DateRangePicker(elem, {
+            format: 'yyyy-mm-dd',
+            showOnFocus: true,
+          })
+        },
+        
+        didOpen: () => {
+            return [
+              document.getElementById('start').removeAttribute('disabled'),
+              document.getElementById('end').removeAttribute('disabled')
+            ]
+        
+          },
+        callback: function (result) {
+          console.log('web call')
+          let form = document.getElementById('check-avai-form')
+          let formData = new FormData(form)
+          formData.append("csrf_token", "{{.CSRFToken}}")
+          fetch('/search-avai-json', {
+            method: "post",
+            body: formData,
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data)
+            })
+        }
+      })
+    })
+</script>
+{{end}}
+

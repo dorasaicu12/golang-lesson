@@ -1,0 +1,84 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container ">
+
+    <div class="row">
+      <div class="col">
+         <h1 class="mt-5">Search for reservasion</h1>
+         <form action="/search-avai" method="POST" class="row g-3 needs-validation" novalidate class="needs-validation">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+          <div class="form-row">
+            <div class ="col">
+              <div class ="form-row" id="reservation-dates-modal">
+                <div class ="col">
+                  <input required class="form-control" type="text"  name="start" id="start" placeholder="Arrival">
+                </div>
+                <div class ="col">
+                  <input required class="form-control" type="text"  name="end" id="end" placeholder="Departure">
+                </div>
+              </div>
+            </div>
+          </div>
+             
+
+          <div class="col-12">
+            <hr>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <button class="btn btn-primary" id="But1"> Check avaibility </button>
+        </div>
+    </div>
+    
+
+  </div>
+  <script>
+       document.getElementById("But1").addEventListener("click",function(){
+    // notifiModal('hey !!!','error','it a error so.....')
+    let html=`
+      <form id="check-avai-form" action="" method="post" novalidate class="needs-validation">
+          <div class="form-row">
+            <div class ="col">
+              <div class ="form-row" id="reservation-dates-modal">
+                <div class ="col">
+                  <input required class="form-control" type="text" disabled name="start" id="start" placeholder="Arrival">
+                </div>
+                <div class ="col">
+                  <input required class="form-control" type="text" disabled name="end" id="end" placeholder="Departure">
+                </div>
+              </div>
+            </div>
+          </div>
+      </form>
+    `
+    attention.customer({msg:html,title:"Choose your date"})
+   })
+   (() => {
+ 'use strict'
+
+ // Fetch all the forms we want to apply custom Bootstrap validation styles to
+ const forms = document.querySelectorAll('.needs-validation')
+
+ // Loop over them and prevent submission
+ Array.from(forms).forEach(form => {
+   form.addEventListener('submit', event => {
+     if (!form.checkValidity()) {
+       event.preventDefault()
+       event.stopPropagation()
+     }
+
+     form.classList.add('was-validated')
+   },false)
+ })
+})()
+const elem = document.getElementById('foo');
+const rangepicker = new DateRangePicker(elem, {
+  // ...options
+});
+  </script>
+{{end}}

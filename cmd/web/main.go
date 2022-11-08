@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/dorasaicu12/booking/pkg/config"
-	"github.com/dorasaicu12/booking/pkg/handlers"
-	"github.com/dorasaicu12/booking/pkg/render"
+	"github.com/dorasaicu12/booking/internal/config"
+	"github.com/dorasaicu12/booking/internal/handlers"
+	"github.com/dorasaicu12/booking/internal/render"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
@@ -71,7 +71,15 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
+	mux.Get("/general-quate", handlers.Repo.General)
+	mux.Get("/major-suite", handlers.Repo.Major)
 
+	mux.Get("/search-avai", handlers.Repo.Search_Avai)
+	mux.Post("/search-avai", handlers.Repo.Handle_Search_Avai)
+	mux.Post("/search-avai-json", handlers.Repo.AvaibilityJSON)
+	
+	mux.Get("/contact", handlers.Repo.Contact)
+	mux.Get("/make-reservation", handlers.Repo.Reservation)
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 	return mux

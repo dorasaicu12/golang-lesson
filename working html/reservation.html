@@ -11,23 +11,10 @@
       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker-bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
   </head>
-  <style>
-    .my-footer{
-       background-color: #163b65;
-       height: 5em;
-       margin-top: 3em;
-       padding: 1em;
-       color: #FFFFFF;
-       font-size: 80%;
-    }
-    .room-image{
-        max-width: 50%;
-    }
-    p {
-
-    }
-  </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
@@ -95,24 +82,26 @@
       <div class="row">
         <div class="col">
            <h1 class="mt-5">Search for reservasion</h1>
-           <form class="row g-3" action="/major.html" method="get">
-
+           <form action="" method="POST" class="row g-3 needs-validation" novalidate class="needs-validation">
              <div class="form-row">
-                <div class="col">
-                    <label for="start_date"  class="form-label">Start Date</label>
-                    <input type="date" class="form-control" name="" id="start_date" required>
-                    <p>Enter your start date now</p>
-                  </div>
-      
                   <div class="col">
-                      <label for="end_date"  class="form-label">End Date</label>
-                      <input type="date" class="form-control" name="" id="end_date" required>
-                      <p>Enter your end date now</p>
+                    <div id="foo" class="form-row">
+                      <div class="col">
+                        <input required type="text" disabled class="form-control" name="start" placeholder="arrival date">
+                      </div>
+                      
+                      <span>to</span>
+                      <div class="col">
+                        <input required type="text" disabled class="form-control" name="end" placeholder="end date">  
+                      </div>
+                      
                     </div>
+                  </div>
              </div>
-
+               
 
             <div class="col-12">
+              <hr>
               <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
           </form>
@@ -123,7 +112,7 @@
             <a href="/make-reservation" class="btn btn-success">Check Avaibility</a>
           </div>
       </div>
-
+      <button class="btn btn-primary" id="But1"> click me </button>
 
     </div>
 
@@ -149,5 +138,165 @@
       integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
+    <script src="https://unpkg.com/notie"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      let attention =Promt();
+      (() => {
+ 'use strict'
+
+ // Fetch all the forms we want to apply custom Bootstrap validation styles to
+ const forms = document.querySelectorAll('.needs-validation')
+   document.getElementById("But1").addEventListener("click",function(){
+    // notifiModal('hey !!!','error','it a error so.....')
+    let html=`
+      <form id="check-avai-form" action="" method="post" novalidate class="needs-validation">
+          <div class="form-row">
+            <div class ="col">
+              <div class ="form-row" id="reservation-dates-modal">
+                <div class ="col">
+                  <input required class="form-control" type="text" disabled name="start" id="start" placeholder="Arrival">
+                </div>
+                <div class ="col">
+                  <input required class="form-control" type="text" disabled name="end" id="end" placeholder="Departure">
+                </div>
+              </div>
+            </div>
+          </div>
+      </form>
+    `
+    attention.customer({msg:html,title:"Choose your date"})
+   })
+ // Loop over them and prevent submission
+ Array.from(forms).forEach(form => {
+   form.addEventListener('submit', event => {
+     if (!form.checkValidity()) {
+       event.preventDefault()
+       event.stopPropagation()
+     }
+
+     form.classList.add('was-validated')
+   },false)
+ })
+})()
+const elem = document.getElementById('foo');
+const rangepicker = new DateRangePicker(elem, {
+  // ...options
+});
+  notify('success', 'success')
+  function notify(msg, msgtype) {
+    notie.alert({
+      type: msgtype,
+      text: msg,
+    })
+  }
+   function notifiModal(title,icon,text) {
+      Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
+
+    }
+
+    function Promt() {
+        let toast = function (c) {
+          var {
+              msg ="qweqwe",
+              icon="success",
+              position="top-end",
+          }=c
+          const Toast = Swal.mixin({
+            toast: true,
+            title :msg,
+            position: position,
+            icon:icon,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+
+          Toast.fire({})
+        }
+        let success = function (c) {
+          const {
+                msg = "",
+                title = "",
+                footer = "",
+            } = c
+
+            Swal.fire({
+                icon: 'success',
+                title: title,
+                text: msg,
+                footer: footer,
+            })
+        }
+        let error = function (c) {
+          const {
+                msg = "",
+                title = "",
+                footer = "",
+            } = c
+
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: msg,
+                footer: footer,
+            })
+        }
+        async function customer(c){
+          const {
+            msg="",
+            title="",
+          }=c
+          const { value: formValues } = await Swal.fire({
+            title: title,
+            html:msg,
+            backdrop:false,
+            focusConfirm: false,
+            showCancleButton:true,
+            willOpen:()=>{
+              const elem =document.getElementById('check-avai-form')
+              const rp= new DateRangePicker(elem,{
+                format:'yyyy-mm-dd',
+                showOnFocus:true,
+              })
+            },
+            preConfirm: () => {
+              return [
+                document.getElementById('start').value,
+                document.getElementById('end').value
+              ]
+            },
+            didOpen:()=>{
+              return[
+              document.getElementById('start').removeAttribute('disabled'),
+                document.getElementById('end').removeAttribute('disabled')
+              ]
+            }
+          })
+
+          if (formValues) {
+            Swal.fire(JSON.stringify(formValues))
+          }
+        }
+        return {
+          toast: toast,
+          success: success,
+          error:error,
+          customer:customer,
+        }
+      }
+
+   </script>
+
   </body>
 </html>
