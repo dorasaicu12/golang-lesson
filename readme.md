@@ -8,3 +8,5 @@ The repository for [Building Modern Web Applications with Go](https://www.udemy.
 - Uses the [chi router](github.com/go-chi/chi)
 - Uses [alex edwards scs session management](github.com/alexedwards/scs)
 - Uses [nosurf](github.com/justinas/nosurf)
+
+khi test handlers trong data cần copy paste folder templates vào internal/handlers do lỗi của go lang
