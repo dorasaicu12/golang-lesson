@@ -2,41 +2,42 @@
 
 {{define "content"}}
 <div class="container ">
-    <div class="row">
-        <div class="col-lg-12 col-md-3 col-sm-12 col-xs-12 ">
-            <img src="/static/images/generals-quarters.png" alt="this is general pics" class="img-fluid mx-auto d-block room-image">
-        </div>
-    </div>
   <div class="row">
-    <div class="col">
-        <h1 class="text-center mt-4">Major Suite</h1>
-        <p>
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-            vYour home way home,set on a journey with us now
-            Your home way home,set on a journey with us now
-        </p>
+    <div class="col-lg-12 col-md-3 col-sm-12 col-xs-12 ">
+      <img src="/static/images/generals-quarters.png" alt="this is general pics"
+        class="img-fluid mx-auto d-block room-image">
     </div>
   </div>
   <div class="row">
-      <div class="col text-center">
-        <button class="btn btn-primary" id="But1"> Check avaibility </button>
-      </div>
+    <div class="col">
+      <h1 class="text-center mt-4">Major Suite</h1>
+      <p>
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+        vYour home way home,set on a journey with us now
+        Your home way home,set on a journey with us now
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <button class="btn btn-primary" id="But1"> Check avaibility </button>
+    </div>
   </div>
 
 
 </div>
 
 <script>
-  document.getElementById("But1").addEventListener("click",function(){
-// notifiModal('hey !!!','error','it a error so.....')
-let html=`
+  document.getElementById("But1").addEventListener("click", function () {
+    // notifiModal('hey !!!','error','it a error so.....')
+    let html = `
  <form id="check-avai-form" action="" method="post" novalidate class="needs-validation">
      <div class="form-row">
        <div class ="col">
@@ -52,29 +53,56 @@ let html=`
      </div>
  </form>
 `
-attention.customer({msg:html,title:"Choose your date"})
-})
-(() => {
-'use strict'
+    attention.customer({
+      msg: html,
+      title: "Choose your date",
+      willOpen: () => {
 
-// Fetch all the forms we want to apply custom Bootstrap validation styles to
-const forms = document.querySelectorAll('.needs-validation')
+      },
 
-// Loop over them and prevent submission
-Array.from(forms).forEach(form => {
-form.addEventListener('submit', event => {
-if (!form.checkValidity()) {
-  event.preventDefault()
-  event.stopPropagation()
-}
+      didOpen: () => {
+        return [
+          document.getElementById('start').removeAttribute('disabled'),
+          document.getElementById('end').removeAttribute('disabled')
+        ]
 
-form.classList.add('was-validated')
-},false)
-})
-})()
-const elem = document.getElementById('foo');
-const rangepicker = new DateRangePicker(elem, {
-// ...options
-});
+      },
+      callback: function (result) {
+        console.log('web call')
+        let form = document.getElementById('check-avai-form')
+        let formData = new FormData(form)
+        formData.append("csrf_token", "{{.CSRFToken}}")
+        formData.append("room_id","2")
+        fetch('/search-avai-json', {
+          method: "post",
+          body: formData,
+        })
+          .then(response => response.json())
+          .then(data => {
+            if(data.ok){
+              console.log(data.room_id)
+              attention.customer({
+                icon:'success',
+                msg:'<p>Room is availible</p>'
+                  +'<p><a href="/book-room?id='
+                  +data.room_id
+                  +'&s='
+                  +data.start_date
+                  +'&e='
+                  +data.end_date
+                  +'" class="btn btn-primary">'
+                  +'Book now </a></p>',
+                    showConfirmButton:false
+              })
+            }else{
+              attention.error({
+                msg:"No avability"
+              })
+            }
+          })
+      }
+    })
+
+  })
 </script>
 {{end}}

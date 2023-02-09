@@ -3,6 +3,7 @@ package driver
 import (
 	"database/sql"
 	"time"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 //DB HOLD DATABASE CONNECTION
