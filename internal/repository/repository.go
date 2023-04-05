@@ -12,4 +12,9 @@ type DatabaseRepo interface {
 	GetuserById(id int)(models.Users,error)
 	UpdateUser(u models.Users)(error)
 	Authenticate(email,tesPassword string)(int,string,error)
+	AllReservation()([]models.Reservation,error)
+	GetOneReservation(id int)(models.Reservation,error)
+	UpdateReservation(u models.Reservation,id int)(error)
+	DeleteReservation(id int)(error)
+	UpdateProcessReservation(id,processed int)(error)
 }

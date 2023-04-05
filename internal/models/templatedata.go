@@ -14,4 +14,5 @@ type TemplateData struct {
 	Error     string
 	Form *form.Form
 	IsAuthenticated int
+	UrlGlobal string
 }

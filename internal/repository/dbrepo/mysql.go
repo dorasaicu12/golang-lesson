@@ -174,3 +174,122 @@ func (m *mysqlDBrepo) Authenticate(email,tesPassword string)(int,string,error){
 	}
 	return id,hashedPassword,nil
 }
+
+func (m *mysqlDBrepo) AllReservation()([]models.Reservation,error){
+	ctx,cancle := context.WithTimeout(context.Background(),3*time.Second)
+	defer cancle()
+    var reservation []models.Reservation
+	query := `
+	select r.id,r.first_name,r.last_name,r.email,r.phone,r.start_date,r.end_date,r.room_id,r.created_at,
+	r.updated_at,
+	rm.id,rm.room_name
+	from reservation r
+	left join rooms rm on (r.room_id = rm.id)
+	order by r.id asc
+	`
+	rows,err :=m.DB.QueryContext(ctx,query)
+	if err != nil{
+		return reservation,err
+	}
+	defer rows.Close()
+	for rows.Next(){
+		var i models.Reservation
+		err := rows.Scan(
+			&i.ID,
+			&i.FirstName,
+			&i.LastName,
+			&i.Email,
+			&i.Phone,
+			&i.StartDate,
+			&i.EndDate,
+			&i.RoomID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Room.ID,
+			&i.Room.RoomName,
+		)
+		if err !=nil{
+			return reservation,err
+		}
+		reservation =append(reservation, i)
+	}
+	if err = rows.Err(); err != nil{
+		return reservation,err
+	}
+	return reservation,nil
+}
+
+func (m *mysqlDBrepo) GetOneReservation(id int)(models.Reservation,error){
+	ctx,cancle := context.WithTimeout(context.Background(),3*time.Second)
+	defer cancle()
+	var res models.Reservation
+
+	query :=`
+	select r.id,r.first_name,r.last_name,r.email,r.phone,r.start_date,r.end_date,r.room_id,r.created_at,
+	r.updated_at,
+	rm.id,rm.room_name
+	from reservation r
+	left join rooms rm on (r.room_id = rm.id)
+	where r.id=?
+	`
+	row:=m.DB.QueryRowContext(ctx,query,id)
+	err :=row.Scan(
+		&res.ID,
+		&res.FirstName,
+		&res.LastName,
+		&res.Email,
+		&res.Phone,
+		&res.StartDate,
+		&res.EndDate,
+		&res.RoomID,
+		&res.CreatedAt,
+		&res.UpdatedAt,
+		&res.Room.ID,
+		&res.Room.RoomName,
+	)
+	if err != nil{
+		return res,err
+	}
+	return res,nil
+}
+
+func (m *mysqlDBrepo) UpdateReservation(u models.Reservation,id int)(error){
+	ctx,cancle := context.WithTimeout(context.Background(),3*time.Second)
+	defer cancle()
+	query :=`update reservation set first_name=?,last_name=?,email=?,phone =?,updated_at=? where id = ? `
+	_,err :=m.DB.ExecContext(ctx,query,
+        u.FirstName,
+		u.LastName,
+		u.Email,
+		u.Phone,
+		time.Now(),
+		id,
+	)
+	if err != nil {
+      return err
+	}
+	return nil
+}
+//delete one reservation by id
+func (m *mysqlDBrepo) DeleteReservation(id int)(error){
+	ctx,cancle := context.WithTimeout(context.Background(),3*time.Second)
+	defer cancle()
+	query :="delete from reservation where id = ?"
+	_,err:=m.DB.ExecContext(ctx,query,id)
+	if err != nil{
+		return err
+	}
+    return nil
+}
+
+func (m *mysqlDBrepo) UpdateProcessReservation(id,processed int)(error){
+	ctx,cancle := context.WithTimeout(context.Background(),3*time.Second)
+	defer cancle()
+	query :="update reservation set processed =? where id = ?"
+	_,err:=m.DB.ExecContext(ctx,query,processed,id)
+	if err != nil{
+		return err
+	}
+    return nil
+}
+

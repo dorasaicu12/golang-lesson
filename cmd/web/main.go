@@ -86,7 +86,7 @@ func run() (*driver.DB,error){
 
 		//connect to database
         log.Println("connecting to database....")
-		db,err :=driver.ConnectSQL("root:@(127.0.0.1:3306)/booking")
+		db,err :=driver.ConnectSQL("root:@(127.0.0.1:3306)/booking?parseTime=true")
 		if(err !=nil){
 			log.Fatal(err)
 			return nil,err
@@ -138,8 +138,17 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/user-logout",handlers.Repo.Logout)
 
 	mux.Route("/admin",func(mux chi.Router){
-		mux.Use(Auth)
+		//mux.Use(Auth)
 		mux.Get("/dashboard",handlers.Repo.AdminDashboard)
+		mux.Get("/new-reservation",handlers.Repo.AdminNewReservation)
+		mux.Get("/all-reservation",handlers.Repo.AdminAllReservation)
+		mux.Get("/reservation-calendar",handlers.Repo.AdminCalendarReservation)
+
+		mux.Get("/reservation-show/{src}/{id}",handlers.Repo.AdminShowRevervation)
+		mux.Post("/reservation-show/{src}/{id}",handlers.Repo.AdminPostShowRevervation)
+
+		mux.Get("/processed/{src}/{id}",handlers.Repo.AdminProcessedReservation)
+		mux.Get("/deleted/{src}/{id}",handlers.Repo.AdminDeletedReservation)
 	})
 
 	fileServer := http.FileServer(http.Dir("./static/"))

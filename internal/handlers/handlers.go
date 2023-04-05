@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/dorasaicu12/booking/internal/config"
@@ -385,3 +386,114 @@ func (m *Repository) Logout(w http.ResponseWriter,r *http.Request){
 func (m *Repository) AdminDashboard(w http.ResponseWriter,r *http.Request){
 	render.Template(w,r,"admin-dashboard.page.tmpl",&models.TemplateData{})
 }
+func (m *Repository) AdminNewReservation(w http.ResponseWriter,r *http.Request){
+	reservation,err :=m.DB.AllReservation()
+	if err !=nil{
+		helpers.ServerError(w,err)
+		return
+	}
+	data :=make(map[string]interface{})
+	data["reservation"] =reservation
+	render.Template(w,r,"admin-new-reservation.page.tmpl",&models.TemplateData{
+		Data: data,
+	})
+}
+
+func (m *Repository) AdminAllReservation(w http.ResponseWriter,r *http.Request){
+	reservation,err :=m.DB.AllReservation()
+	if err !=nil{
+		helpers.ServerError(w,err)
+		return
+	}
+	data :=make(map[string]interface{})
+	data["reservation"] =reservation
+	render.Template(w,r,"admin-all-reservation.page.tmpl",&models.TemplateData{
+		Data: data,
+	})
+}
+func (m *Repository) AdminShowRevervation(w http.ResponseWriter,r *http.Request){
+	explode :=strings.Split(r.RequestURI, "/")
+	str := explode[4]
+    str = strings.Replace(str, "%7D", "", -1)
+    num, err := strconv.Atoi(str)
+    if err != nil {
+        fmt.Println("Failed to convert string to int")
+        return
+    }
+	src :=explode[3]
+	stringMap :=make(map[string]string)
+	stringMap["src"]=src
+	//get revervation
+	res,err:=m.DB.GetOneReservation(num)
+	data:=make(map[string]interface{})
+	data["reservation"]=res
+	render.Template(w,r,"admin-show.page.tmpl",&models.TemplateData{
+		StringMap:stringMap,
+		Data: data,
+		Form: form.New(nil),
+	})
+}
+func (m *Repository) AdminPostShowRevervation(w http.ResponseWriter,r *http.Request){
+	err :=r.ParseForm()
+	if err != nil{
+	   helpers.ServerError(w,err)
+	   return
+	}
+	explode :=strings.Split(r.RequestURI, "/")
+	str := explode[4]
+    str = strings.Replace(str, "%7D", "", -1)
+	src :=explode[3]
+    num, err := strconv.Atoi(str)
+	if err != nil {
+        fmt.Println("Failed to convert string to int")
+        return
+    }
+	res,err := m.DB.GetOneReservation(num)
+	if err != nil {
+        helpers.ServerError(w,err)
+        return
+    }
+
+	res.FirstName=r.Form.Get("first_name")
+	res.LastName=r.Form.Get("last_name")
+	res.Phone=r.Form.Get("phone")
+	res.Email=r.Form.Get("email")
+	err = m.DB.UpdateReservation(res,num)
+	if err != nil {
+        helpers.ServerError(w,err)
+        return
+    }
+	m.App.Session.Put(r.Context(),"flash","Change saved")
+	http.Redirect(w,r,fmt.Sprintf("/admin/%s-reservation",src),http.StatusSeeOther)
+}
+
+func (m *Repository) AdminCalendarReservation(w http.ResponseWriter,r *http.Request){
+	render.Template(w,r,"admin-calendar.page.tmpl",&models.TemplateData{})
+}
+
+func (m *Repository) AdminProcessedReservation(w http.ResponseWriter,r *http.Request){
+	id,_:=strconv.Atoi(chi.URLParam(r,"id"))
+	src:=chi.URLParam(r,"src")
+	err :=m.DB.UpdateProcessReservation(id,1)
+	if err != nil {
+        helpers.ServerError(w,err)
+        return
+    }
+	m.App.Session.Put(r.Context(),"flash","Reservation mark ass resource")
+	http.Redirect(w,r,fmt.Sprintf("/admin/%s-reservation",src),http.StatusSeeOther)
+}
+
+func (m *Repository) AdminDeletedReservation(w http.ResponseWriter,r *http.Request){
+	id,_:=strconv.Atoi(chi.URLParam(r,"id"))
+	src:=chi.URLParam(r,"src")
+	err :=m.DB.DeleteReservation(id)
+	if err != nil {
+        helpers.ServerError(w,err)
+        return
+    }
+	m.App.Session.Put(r.Context(),"flash","Reservation has ben deleted")
+	http.Redirect(w,r,fmt.Sprintf("/admin/%s-reservation",src),http.StatusSeeOther)
+}
+
+
+

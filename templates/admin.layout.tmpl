@@ -6,17 +6,31 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>RoyalUI Admin</title>
+  <title>
+    {{block "title" .}}
+
+    {{end}}
+  </title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="../static/admin/vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="../static/admin/vendors/base/vendor.bundle.base.css">
+
+  <link rel="stylesheet" href="{{.UrlGlobal}}/static/admin/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="{{.UrlGlobal}}/static/admin/vendors/base/vendor.bundle.base.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
   <!-- endinject -->
   <!-- plugin css for this page -->
   <!-- End plugin css for this page -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="../static/admin/css/style.css">
+  <link rel="stylesheet" href="{{.UrlGlobal}}/static/admin/css/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../static/admin/images/favicon.png" />
+  <link rel="shortcut icon" href="{{.UrlGlobal}}/static/admin/images/favicon.png" />
+
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+  <style>
+    .notie-container{
+      z-index: 50000;
+    }
+  </style>
 </head>
 <body>
   <div class="container-scroller">
@@ -69,7 +83,7 @@
               <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
               <a class="dropdown-item">
                 <div class="item-thumbnail">
-                    <img src="../static/admin/images/faces/face4.jpg" alt="image" class="profile-pic">
+                    <img src="{{.UrlGlobal}}/static/admin/images/faces/face4.jpg" alt="image" class="profile-pic">
                 </div>
                 <div class="item-content flex-grow">
                   <h6 class="ellipsis font-weight-normal">David Grey
@@ -81,7 +95,7 @@
               </a>
               <a class="dropdown-item">
                 <div class="item-thumbnail">
-                    <img src="../static/admin/images/faces/face2.jpg" alt="image" class="profile-pic">
+                    <img src="{{.UrlGlobal}}/static/admin/images/faces/face2.jpg" alt="image" class="profile-pic">
                 </div>
                 <div class="item-content flex-grow">
                   <h6 class="ellipsis font-weight-normal">Tim Cook
@@ -93,7 +107,7 @@
               </a>
               <a class="dropdown-item">
                 <div class="item-thumbnail">
-                    <img src="../static/admin/images/faces/face3.jpg" alt="image" class="profile-pic">
+                    <img src="{{.UrlGlobal}}/static/admin/images/faces/face3.jpg" alt="image" class="profile-pic">
                 </div>
                 <div class="item-content flex-grow">
                   <h6 class="ellipsis font-weight-normal"> Johnson
@@ -155,7 +169,7 @@
           </li>
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-              <img src="../static/admin/images/faces/face28.jpg" alt="profile"/>
+              <img src="{{.UrlGlobal}}/static/admin/images/faces/face28.jpg" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <a class="dropdown-item">
@@ -180,7 +194,7 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="admin/dashboard">
+            <a class="nav-link" href="dashboard">
               <i class="ti-shield menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
@@ -193,35 +207,13 @@
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/ui-features/buttons.html">New Reservation</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/ui-features/typography.html">All Reservation</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/admin/new-reservation">New Reservation</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/admin/all-reservation">All Reservation</a></li>
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../static/admin/pages/forms/basic_elements.html">
-              <i class="ti-layout-list-post menu-icon"></i>
-              <span class="menu-title">Form elements</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../static/admin/pages/charts/chartjs.html">
-              <i class="ti-pie-chart menu-icon"></i>
-              <span class="menu-title">Charts</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../static/admin/pages/tables/basic-table.html">
-              <i class="ti-view-list-alt menu-icon"></i>
-              <span class="menu-title">Tables</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../static/admin/pages/icons/themify.html">
-              <i class="ti-star menu-icon"></i>
-              <span class="menu-title">Icons</span>
-            </a>
-          </li>
+
+
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
               <i class="ti-user menu-icon"></i>
@@ -230,18 +222,18 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/samples/login.html"> Login </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/samples/login-2.html"> Login 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/samples/register.html"> Register </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/samples/register-2.html"> Register 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../static/admin/pages/samples/lock-screen.html"> Lockscreen </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/static/admin/pages/samples/login.html"> Login </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/static/admin/pages/samples/login-2.html"> Login 2 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/static/admin/pages/samples/register.html"> Register </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/static/admin/pages/samples/register-2.html"> Register 2 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{.UrlGlobal}}/static/admin/pages/samples/lock-screen.html"> Lockscreen </a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="documentation/documentation.html">
+            <a class="nav-link" href="reservation-calendar">
               <i class="ti-write menu-icon"></i>
-              <span class="menu-title">Documentation</span>
+              <span class="menu-title">Reservation calendar</span>
             </a>
           </li>
         </ul>
@@ -274,23 +266,63 @@
   <!-- container-scroller -->
 
   <!-- plugins:js -->
-  <script src="../static/admin/vendors/base/vendor.bundle.base.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/vendors/base/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page-->
-  <script src="../static/admin/vendors/chart.js/Chart.min.js"></script>
-  <script src="../static/admin/js/jquery.cookie.js" type="text/javascript"></script>
+  <script src="{{.UrlGlobal}}/static/admin/vendors/chart.js/Chart.min.js"></script>
+  <script src="http://localhost:8080/static/admin/js/jquery.cookie.js" type="text/javascript"></script>
   <!-- End plugin js for this page-->
   <!-- inject:js -->
-  <script src="../static/admin/js/off-canvas.js"></script>
-  <script src="../static/admin/js/hoverable-collapse.js"></script>
-  <script src="../static/admin/js/template.js"></script>
-  <script src="../static/admin/js/todolist.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/js/off-canvas.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/js/hoverable-collapse.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/js/template.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/js/todolist.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
-  <script src="../static/admin/js/dashboard.js"></script>
+  <script src="{{.UrlGlobal}}/static/admin/js/dashboard.js"></script>
+  <script src="https://unpkg.com/notie"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- End custom js for this page-->
+  <script src="{{.UrlGlobal}}/static/js/app.js"></script>
 </body>
 
 </html>
+
+<script>
+let attention = Promt();
+    function notify(msg, msgtype) {
+      notie.alert({
+        type: msgtype,
+        text: msg,
+      })
+    }
+    function notifiModal(title, icon, text) {
+      Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
+
+    }
+  </script>
+
+  {{with .Error}}
+  <script>
+    notify("{{.}}", "error")
+  </script>
+  {{end}}
+
+  {{with .Flash}}
+  <script>
+    notify("{{.}}", "success")
+  </script>
+  {{end}}
+
+  {{with .Warning}}
+  <script>
+    notify("{{.}}", "warning")
+  </script>
+  {{end}}
 
 {{end}}
